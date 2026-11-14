@@ -1,0 +1,435 @@
+{
+  "info": {
+    "_postman_id": "2a982ceb-fe9f-4fa8-80dd-5a4b02c46435",
+    "name": "KatalogKu API (PocketBase)",
+    "description": "Koleksi uji API microservice KatalogKu berbasis PocketBase. Jalankan berurutan dari atas. Pilih environment Lokal / Server / Cloudflare.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "favId",
+      "value": ""
+    },
+    {
+      "key": "testEmail",
+      "value": ""
+    },
+    {
+      "key": "testPassword",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Produk (product-service)",
+      "item": [
+        {
+          "name": "Cek gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Gateway sehat\", () => { pm.response.to.have.status(200); pm.expect(pm.response.json()).to.eql({gateway:\"ok\"}); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Daftar produk",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?perPage=5&sort=-created",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "perPage",
+                  "value": "5"
+                },
+                {
+                  "key": "sort",
+                  "value": "-created"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Daftar produk\", () => { pm.response.to.have.status(200); const r=pm.response.json(); pm.expect(r.items.length).to.be.above(0); pm.expect(r.totalItems).to.be.at.least(5); pm.expect(r.page).to.eql(1); pm.collectionVariables.set(\"productId\",r.items[0].id); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cari produk",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?filter=title~'kopi'",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "title~'kopi'"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Pencarian kopi\", () => { pm.response.to.have.status(200); const r=pm.response.json(); pm.expect(r.items.length).to.be.above(0); r.items.forEach(p=>pm.expect(p.title.toLowerCase()).to.include(\"kopi\")); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detail produk",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Detail produk\", () => { pm.response.to.have.status(200); pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"productId\")); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Akun (account-service)",
+      "item": [
+        {
+          "name": "Daftar akun",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/records",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "records"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Uji Postman\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"passwordConfirm\": \"{{testPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"testEmail\", \"test-\" + pm.variables.replaceIn(\"{{$guid}}\") + \"@katalogku.test\");",
+                  "pm.collectionVariables.set(\"testPassword\", pm.variables.replaceIn(\"{{$guid}}\") + \"aA9\");"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Registrasi berhasil\", () => { pm.response.to.have.status(200); const r=pm.response.json(); pm.expect(r.id).to.be.a(\"string\"); pm.expect(r).not.to.have.property(\"password\"); pm.collectionVariables.set(\"userId\",r.id); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login (simpan token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/auth-with-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "auth-with-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identity\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login berhasil\", () => { pm.response.to.have.status(200); const r=pm.response.json(); pm.expect(r.token).to.be.a(\"string\").and.not.empty; pm.expect(r.record.id).to.eql(pm.collectionVariables.get(\"userId\")); pm.collectionVariables.set(\"token\",r.token); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Favorit (account-service)",
+      "item": [
+        {
+          "name": "Tambah favorit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/favorites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "favorites"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"{{userId}}\",\n  \"product_id\": \"{{productId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Favorit dibuat\", () => { pm.response.to.have.status(200); const r=pm.response.json(); pm.expect(r.user).to.eql(pm.collectionVariables.get(\"userId\")); pm.expect(r.product_id).to.eql(pm.collectionVariables.get(\"productId\")); pm.collectionVariables.set(\"favId\",r.id); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lihat favorit",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/favorites",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "favorites"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Favorit milik sendiri\", () => { pm.response.to.have.status(200); const r=pm.response.json(); pm.expect(r.totalItems).to.eql(1); pm.expect(r.items[0].id).to.eql(pm.collectionVariables.get(\"favId\")); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Hapus favorit",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/favorites/{{favId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "favorites",
+                "{{favId}}"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Favorit dihapus\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Cleanup",
+      "item": [
+        {
+          "name": "Bersihkan akun pengujian",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/auth/records/{{userId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Akun pengujian dihapus\", () => pm.response.to.have.status(204));",
+                  "[\"testEmail\",\"testPassword\",\"token\",\"userId\",\"favId\",\"productId\"].forEach(k=>pm.collectionVariables.unset(k));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

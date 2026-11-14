@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-11-08T15:37:17.346Z",
+  "runtime": "STB ARM64; Docker 26.1.4; PocketBase 0.40.5; Nginx 1.28.3; gateway 127.0.0.1:8080 via SSH forwarding",
+  "newmanVersion": "6.2.3",
+  "stats": {
+    "iterations": {
+      "total": 1,
+      "pending": 0,
+      "failed": 0
+    },
+    "items": {
+      "total": 10,
+      "pending": 0,
+      "failed": 0
+    },
+    "scripts": {
+      "total": 11,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequests": {
+      "total": 10,
+      "pending": 0,
+      "failed": 0
+    },
+    "requests": {
+      "total": 10,
+      "pending": 0,
+      "failed": 0
+    },
+    "tests": {
+      "total": 10,
+      "pending": 0,
+      "failed": 0
+    },
+    "assertions": {
+      "total": 10,
+      "pending": 0,
+      "failed": 0
+    },
+    "testScripts": {
+      "total": 10,
+      "pending": 0,
+      "failed": 0
+    },
+    "prerequestScripts": {
+      "total": 1,
+      "pending": 0,
+      "failed": 0
+    }
+  },
+  "failures": 0
+}

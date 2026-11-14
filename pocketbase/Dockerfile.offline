@@ -1,0 +1,6 @@
+FROM alpine:3.22
+COPY .offline/pocketbase /usr/local/bin/pocketbase
+COPY .offline/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+RUN chmod 755 /usr/local/bin/pocketbase
+EXPOSE 8090
+CMD ["pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=/pb_data", "--hooksDir=/pb_hooks"]

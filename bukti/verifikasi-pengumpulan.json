@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-11-08T23:10:46.967191+07:00",
+  "host": "192.168.137.146",
+  "commands": {
+    "containers": {
+      "command": "cd /opt/katalogku-pocketbase && docker compose -f docker-compose.yml -f compose.offline.yml ps --format '{{.Service}} {{.State}} {{.Health}}'",
+      "output": "account-service running healthy\ngateway running healthy\nproduct-service running healthy",
+      "exit_code": 0
+    },
+    "health": {
+      "command": "curl -s http://127.0.0.1:8080/api/health",
+      "output": "{\"gateway\":\"ok\"}",
+      "exit_code": 0
+    },
+    "products": {
+      "command": "python3 - <<'PY'\nimport json,urllib.request\nr=json.load(urllib.request.urlopen('http://127.0.0.1:8080/api/products?perPage=30&sort=title'))\nprint('page:',r['page'],'totalItems:',r['totalItems'])\nfor p in r['items']: print(p['title'])\nPY",
+      "output": "page: 1 totalItems: 5\nEarphone Bluetooth\nKemeja Batik Parang\nKopi Gayo 250 gr\nPower Bank 10000 mAh\nTeh Hijau Organik",
+      "exit_code": 0
+    },
+    "repository": {
+      "command": "cd /opt/katalogku-pocketbase && git rev-parse --short HEAD && git status --porcelain",
+      "output": "a420894",
+      "exit_code": 0
+    }
+  }
+}

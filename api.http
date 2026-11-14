@@ -1,0 +1,54 @@
+### REST Client. Isi environment proses sebelum membuka VS Code.
+### KATALOGKU_TEST_EMAIL harus unik, KATALOGKU_TEST_PASSWORD minimal 10 karakter.
+@baseUrl = http://localhost:8080/api
+@email = {{$processEnv KATALOGKU_TEST_EMAIL}}
+@password = {{$processEnv KATALOGKU_TEST_PASSWORD}}
+@productId = {{list.response.body.$.items[0].id}}
+@token = {{login.response.body.$.token}}
+@userId = {{login.response.body.$.record.id}}
+
+### Health
+GET {{baseUrl}}/health
+
+### Daftar produk
+# @name list
+GET {{baseUrl}}/products?perPage=5&sort=-created
+
+### Pencarian
+GET {{baseUrl}}/products?filter=title~%27kopi%27
+
+### Detail
+GET {{baseUrl}}/products/{{productId}}
+
+### Registrasi akun pengujian baru
+POST {{baseUrl}}/auth/records
+Content-Type: application/json
+
+{"name":"Uji REST Client","email":"{{email}}","password":"{{password}}","passwordConfirm":"{{password}}"}
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/auth-with-password
+Content-Type: application/json
+
+{"identity":"{{email}}","password":"{{password}}"}
+
+### Tambah favorit
+# @name favorite
+POST {{baseUrl}}/favorites
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"user":"{{userId}}","product_id":"{{productId}}"}
+
+### Favorit sendiri
+GET {{baseUrl}}/favorites
+Authorization: Bearer {{token}}
+
+### Hapus record yang baru dibuat
+DELETE {{baseUrl}}/favorites/{{favorite.response.body.$.id}}
+Authorization: Bearer {{token}}
+
+### Bersihkan akun pengujian yang dibuat pada urutan ini
+DELETE {{baseUrl}}/auth/records/{{userId}}
+Authorization: Bearer {{token}}

@@ -1,0 +1,337 @@
+{
+  "timestamp": "2026-11-08T15:35:05.427151+00:00",
+  "gateway": "http://127.0.0.1:8080",
+  "runtime": "STB ARM64; Docker 26.1.4; PocketBase 0.40.5; Nginx 1.28.3; 3 containers after recreate",
+  "results": [
+    {
+      "scenario": "GET /api/health",
+      "expected": "200; gateway=ok",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "GET /api/products",
+      "expected": "200; items, page, totalItems; lima produk seed",
+      "actual": "HTTP 200; totalItems=5",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Pagination dan query string",
+      "expected": "200; page=2; perPage=2; dua item",
+      "actual": "HTTP 200; totalItems=5",
+      "status": "PASS"
+    },
+    {
+      "scenario": "GET /api/products/:id",
+      "expected": "200; id dan title cocok",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Pencarian kopi",
+      "expected": "200; seluruh hasil memuat kopi",
+      "actual": "HTTP 200; totalItems=1",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Produk tidak ditemukan",
+      "expected": "404; error PocketBase",
+      "actual": "HTTP 404; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Batas route produk",
+      "expected": "404",
+      "actual": "HTTP 404",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Favorit tanpa login",
+      "expected": "200; daftar kosong menurut listRule PocketBase",
+      "actual": "HTTP 200; totalItems=0",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Create produk anonim",
+      "expected": "403; superuser diperlukan",
+      "actual": "HTTP 403; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Update produk anonim",
+      "expected": "403; data tetap",
+      "actual": "HTTP 403; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Delete produk anonim",
+      "expected": "403; produk tetap",
+      "actual": "HTTP 403; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Produk tidak berubah setelah akses ditolak",
+      "expected": "200; seluruh field sama",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Registrasi user A",
+      "expected": "200; id tersedia; password/tokenKey tidak bocor",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Login user A",
+      "expected": "200; token dan record cocok",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Login password salah A",
+      "expected": "400; tidak ada token",
+      "actual": "HTTP 400; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Registrasi user B",
+      "expected": "200; id tersedia; password/tokenKey tidak bocor",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Login user B",
+      "expected": "200; token dan record cocok",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Login password salah B",
+      "expected": "400; tidak ada token",
+      "actual": "HTTP 400; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Create favorit anonim",
+      "expected": "400; createRule menolak",
+      "actual": "HTTP 400; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Tambah favorit A",
+      "expected": "200; pemilik dan product_id cocok",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "List favorit A",
+      "expected": "200; tepat satu record milik A",
+      "actual": "HTTP 200; totalItems=1",
+      "status": "PASS"
+    },
+    {
+      "scenario": "View favorit A",
+      "expected": "200; id cocok",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Favorit duplikat",
+      "expected": "400; unique index menolak",
+      "actual": "HTTP 400; error fields=product_id,user",
+      "status": "PASS"
+    },
+    {
+      "scenario": "List favorit B terisolasi",
+      "expected": "200; kosong",
+      "actual": "HTTP 200; totalItems=0",
+      "status": "PASS"
+    },
+    {
+      "scenario": "B membaca favorit A",
+      "expected": "404; data tidak bocor",
+      "actual": "HTTP 404; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Anonim membaca favorit A",
+      "expected": "404; data tidak bocor",
+      "actual": "HTTP 404; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "B membuat favorit atas nama A",
+      "expected": "400; createRule menolak",
+      "actual": "HTTP 400; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "B menghapus favorit A",
+      "expected": "404; data tetap ada",
+      "actual": "HTTP 404; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Update favorit terkunci",
+      "expected": "403; updateRule null",
+      "actual": "HTTP 403; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "B membaca user A",
+      "expected": "404; data privat",
+      "actual": "HTTP 404; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "List user hanya diri sendiri",
+      "expected": "200; hanya user B",
+      "actual": "HTTP 200; totalItems=1",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Create produk user biasa",
+      "expected": "403",
+      "actual": "HTTP 403; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Update produk user biasa",
+      "expected": "403",
+      "actual": "HTTP 403; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Hapus favorit sendiri",
+      "expected": "204; body kosong",
+      "actual": "HTTP 204",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Favorit sudah terhapus",
+      "expected": "404",
+      "actual": "HTTP 404; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "List favorit setelah hapus",
+      "expected": "200; kosong",
+      "actual": "HTTP 200; totalItems=0",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Delete user dan cascade favorit",
+      "expected": "204",
+      "actual": "HTTP 204",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Favorit cascade tidak dapat diakses",
+      "expected": "404",
+      "actual": "HTTP 404; error fields=",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Superuser membuat produk harga nol",
+      "expected": "200; price=0",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Harga wajib",
+      "expected": "400; error field price",
+      "actual": "HTTP 400; error fields=price",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Harga negatif",
+      "expected": "400; error field price",
+      "actual": "HTTP 400; error fields=price",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Harga bukan angka",
+      "expected": "400; error field price",
+      "actual": "HTTP 400; error fields=price",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Title wajib",
+      "expected": "400; error field title",
+      "actual": "HTTP 400; error fields=title",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Category wajib",
+      "expected": "400; error field category",
+      "actual": "HTTP 400; error fields=category",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Rating di atas 5",
+      "expected": "400; error field rating",
+      "actual": "HTTP 400; error fields=rating",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Rating negatif",
+      "expected": "400; error field rating",
+      "actual": "HTTP 400; error fields=rating",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Stock pecahan",
+      "expected": "400; error field stock",
+      "actual": "HTTP 400; error fields=stock",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Stock negatif",
+      "expected": "400; error field stock",
+      "actual": "HTTP 400; error fields=stock",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Thumbnail bukan URL",
+      "expected": "400; error field thumbnail",
+      "actual": "HTTP 400; error fields=thumbnail",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Superuser update produk",
+      "expected": "200; price=1.5; rating=5; stock=2",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Update harga invalid",
+      "expected": "400; error field price",
+      "actual": "HTTP 400; error fields=price",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Update harga menjadi nol",
+      "expected": "200; price=0",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Update parsial tanpa price",
+      "expected": "200; description berubah; price tetap 0",
+      "actual": "HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Update harga null",
+      "expected": "400; error field price",
+      "actual": "HTTP 400; error fields=price",
+      "status": "PASS"
+    },
+    {
+      "scenario": "Superuser delete produk pengujian",
+      "expected": "204",
+      "actual": "HTTP 204",
+      "status": "PASS"
+    }
+  ]
+}

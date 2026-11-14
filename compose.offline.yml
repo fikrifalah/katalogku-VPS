@@ -1,0 +1,7 @@
+services:
+  product-service:
+    build:
+      dockerfile: Dockerfile.offline
+  account-service:
+    build:
+      dockerfile: Dockerfile.offline

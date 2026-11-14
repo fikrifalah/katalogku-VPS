@@ -1,0 +1,128 @@
+{
+  "timestamp": "2026-11-08T15:35:00.824770+00:00",
+  "host": "192.168.137.146",
+  "architecture": "aarch64",
+  "docker": "26.1.4",
+  "compose": "2.28.1",
+  "pocketbase": "0.40.5",
+  "nginx": "1.28.3 (image nginx:1.28-alpine)",
+  "build_mode": "Dockerfile.offline; ARM64 images and checksum-verified PocketBase transferred over SSH",
+  "checks": [
+    "Restart tiga container: produk dan favorit tetap tersedia",
+    "Force recreate: ID ketiga container berubah, produk/akun/token/favorit tetap tersedia",
+    "Named volume produk dan akun terpisah dan tetap dipakai setelah recreate",
+    "Cascade delete diperiksa menggunakan superuser account-service",
+    "Aturan firewall INPUT sebelum dan sesudah deployment identik",
+    "Nginx aaPanel tetap merespons HTTP 200",
+    "nginx -t di dalam container lulus"
+  ],
+  "before": {
+    "account-service": {
+      "id": "9b02603f0730221be5fc8fac8b1f2b130bf9c0a0ab427549dedb2211c68306da",
+      "health": "healthy",
+      "started": "2026-11-08T15:31:32.980467536Z",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "katalogku-pocketbase_account_data",
+          "Source": "/opt/katalogku-runtime/docker/volumes/katalogku-pocketbase_account_data/_data",
+          "Destination": "/pb_data"
+        }
+      ]
+    },
+    "gateway": {
+      "id": "1f6c81229433d29e6ec8be6250356a080c55c9fb0fcc9522dffac6891a3d947d",
+      "health": "healthy",
+      "started": "2026-11-08T15:31:44.399903523Z",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Name": null,
+          "Source": "/opt/katalogku-pocketbase/gateway/nginx.conf",
+          "Destination": "/etc/nginx/conf.d/default.conf"
+        }
+      ]
+    },
+    "product-service": {
+      "id": "af8dca6ddff384e4705d000af8a5e502516104ac7870c8114a3c8af0b67a524e",
+      "health": "healthy",
+      "started": "2026-11-08T15:31:33.025086382Z",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Name": null,
+          "Source": "/opt/katalogku-pocketbase/pocketbase/pb_hooks",
+          "Destination": "/pb_hooks"
+        },
+        {
+          "Type": "volume",
+          "Name": "katalogku-pocketbase_product_data",
+          "Source": "/opt/katalogku-runtime/docker/volumes/katalogku-pocketbase_product_data/_data",
+          "Destination": "/pb_data"
+        }
+      ]
+    }
+  },
+  "after_recreate": {
+    "account-service": {
+      "id": "d523d8843cc5fb257820621751ea13539f2597c6327734129dd23be3f12d2eb1",
+      "health": "healthy",
+      "started": "2026-11-08T15:34:38.02713353Z",
+      "mounts": [
+        {
+          "Type": "volume",
+          "Name": "katalogku-pocketbase_account_data",
+          "Source": "/opt/katalogku-runtime/docker/volumes/katalogku-pocketbase_account_data/_data",
+          "Destination": "/pb_data"
+        }
+      ]
+    },
+    "gateway": {
+      "id": "37c7a09f56dc32eee193da5041244d3b46cb4e1a4a33cfedb06d522855de96c0",
+      "health": "healthy",
+      "started": "2026-11-08T15:34:49.369626206Z",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Name": null,
+          "Source": "/opt/katalogku-pocketbase/gateway/nginx.conf",
+          "Destination": "/etc/nginx/conf.d/default.conf"
+        }
+      ]
+    },
+    "product-service": {
+      "id": "d8ed700c502152323dcbeac6602e51e6ea572ec6f05aa92ac33ee615599d7c3a",
+      "health": "healthy",
+      "started": "2026-11-08T15:34:38.010761965Z",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Name": null,
+          "Source": "/opt/katalogku-pocketbase/pocketbase/pb_hooks",
+          "Destination": "/pb_hooks"
+        },
+        {
+          "Type": "volume",
+          "Name": "katalogku-pocketbase_product_data",
+          "Source": "/opt/katalogku-runtime/docker/volumes/katalogku-pocketbase_product_data/_data",
+          "Destination": "/pb_data"
+        }
+      ]
+    }
+  },
+  "final_record_counts": {
+    "products": 5,
+    "users": 0,
+    "favorites": 0
+  },
+  "firewall_input_sha256": "5dc2fd917f1098c3a6d3e82dfca9ccd90ac00c05b9094e68b4d1d43b0cb27fd6",
+  "compose_config_exit_code": 0,
+  "free_disk_bytes": 475422720,
+  "final_record_counts_after_newman": {
+    "products": 5,
+    "users": 0,
+    "favorites": 0
+  },
+  "free_disk_bytes_after_transfer_cleanup": 576892928,
+  "transfer_assets_cleanup": "Only three uploaded transfer files, individually hash verified; images, volumes and offline build inputs retained"
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "title": "Kemeja Batik Parang",
+    "description": "Kemeja batik motif parang, bahan katun.",
+    "category": "fashion",
+    "price": 25,
+    "rating": 4.6,
+    "stock": 40,
+    "thumbnail": "https://picsum.photos/id/21/300"
+  },
+  {
+    "title": "Kopi Gayo 250 gr",
+    "description": "Biji kopi arabika Gayo, sangrai medium.",
+    "category": "groceries",
+    "price": 9,
+    "rating": 4.8,
+    "stock": 120,
+    "thumbnail": "https://picsum.photos/id/30/300"
+  },
+  {
+    "title": "Teh Hijau Organik",
+    "description": "Teh hijau organik dari kebun Jawa Barat.",
+    "category": "groceries",
+    "price": 6.5,
+    "rating": 4.3,
+    "stock": 80,
+    "thumbnail": "https://picsum.photos/id/312/300"
+  },
+  {
+    "title": "Earphone Bluetooth",
+    "description": "Earphone nirkabel, baterai tahan 6 jam.",
+    "category": "electronics",
+    "price": 19,
+    "rating": 4.2,
+    "stock": 60,
+    "thumbnail": "https://picsum.photos/id/96/300"
+  },
+  {
+    "title": "Power Bank 10000 mAh",
+    "description": "Pengisian cepat 20W, dua port USB.",
+    "category": "electronics",
+    "price": 15,
+    "rating": 4.5,
+    "stock": 50,
+    "thumbnail": "https://picsum.photos/id/160/300"
+  }
+]
